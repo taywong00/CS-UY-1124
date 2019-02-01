@@ -1,0 +1,133 @@
+cont. from 10/09/18
+
+Example: Power function ((FIGURE 4 10/09/18))
+
+--> can we reboot to make it even faster?
+  ((FIGURE 5 10/09/18))
+
+  --------------v--code--v----------------
+  #reboot version with different cases as stated in ((FIGURE 5 10/09/18))
+
+  def power2(x, n):
+    if (n == 1):
+      return x
+    else:
+      part1 = power2(x, n//2)
+      part2 = power2(x, n//2)
+
+      if (n % 2 == 0): # even
+        return part1 * part1
+      else: # odd
+        return x * part1 * part2
+  --------------^--code--^----------------
+
+  --> Runtime of reboot: T(n) = Theta(n) -- Linear
+      - ((FIGURE 1))
+      - the reboot wasnt worth it
+
+
+  --------------v--code--v----------------
+  #reboot3 version with different cases as stated in ((FIGURE 5 10/09/18))
+
+  def power3(x, n):
+    if (n == 1):
+      return x
+    else:
+      part = power3(x, n//2)
+
+      if (n % 2 == 0): # even
+        return part * part
+      else: # odd
+        return x * part * part
+  --------------^--code--^----------------
+
+  --> Runtime of reboot3: T(n) = Theta(log(n))
+      - ((FIGURE 2))
+      - making two recursive calls vs one recursive call
+        makes a BIG difference
+      - for it to run faster than the "number of items/numbers"
+        it requires is a big deal
+
+
+
+
+~~~~~~~~~~~~~~ CHANGING TOPICS ~~~~~~~~~~~~~~~~~~
+
+The sorting problem
+
+  problem
+    given a list lst of numbers reorder them, so that at the end,
+    they are in increasing order
+
+  example:
+    if lst is a list containing: [5, 8, 12, 7, 8, 10]
+    after sorting, it would return
+
+  sorting algorithms
+    selection sort
+    insertion sort
+    bubble sort
+    merge sort
+    quick sort
+    heap sort
+
+
+
+Selection Sort
+  - Runtime: Theta(n^2)
+
+  Main difference between Selection Sort and Insertion Sort
+  - in selection sort, at the end of k number of iterations,
+    the first k items in the sorted sublist are in their final position
+  - in \ion sort, at the end of k number of iterations,
+    the first k items may NOT be in their final position, can be shifted
+    later if there is a value that goes in between two others in the sorted
+    sublist
+
+
+
+Merge Sort
+  - step 1: sort (recursively) the first half
+  - step 2: sort (recursively) the second half
+  - step 3: merge the two halves together into one sorted sequence
+
+  --> 3 line implementation?
+      (one for every step? -- step 3 will use an outside function)
+
+
+    merge
+      - compare the sequences one at a time (since they are sorted)
+        --> whichever "min" in each sequence is smaller will be added
+            to the merged list next
+
+    --------------v--code--v----------------
+
+    def merge_sort(lst):
+      if (len(lst) == 0):
+        return
+      else:
+        merge_sort(lst[... : ...])
+        merge_sort(lst[... : ...])
+
+
+    def merge_sort_help(lst, low, high): # low/high are the indices of the sublists were considering
+      if (low == high):
+        return
+
+      mid = low + high // 2
+
+      else: # sort according to 3 steps
+        # steps 1 and 2
+        merge_sort_help(lst, low, mid) # dont need to assign it to a var, it mutates the list internally
+        merge_sort_help(lst, mid + 1, high)
+
+        #merge the two halves, step 3
+        merge(lst, low, mid, high)
+
+    def merge(lst, low_left, high_left, high_right):
+      pass
+
+
+
+
+    --------------^--code--^----------------

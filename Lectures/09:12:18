@@ -1,0 +1,98 @@
+iterators
+
+  for var in iterable-collection
+
+    ex
+      lst = [1, 2, 3]
+      lst_iter = iter(lst)
+
+      --> <list_iterator object at skdjhd83r9> (same for string)
+
+    iterable-collection: an object that produces an iterator via the syntax iter(iterableCollection)
+
+
+
+      ex
+        next(lst_iter)
+        >>> 1
+        next(lst_iter)
+        >>> 2
+        next(lst_iter)
+        >>> 3
+        next(lst_iter)
+        >>> StopIteration
+
+      ex
+        lst = [1, 2, 3]
+        lst1 = [1, 2, 3]
+
+
+simulating for loops
+  s = 'abc'
+  for item in s: --> automatically iterpreter calls iter and next to parse until it gets a StopIteration and the for loop is over
+    print(item)
+
+  ((FIGURE 1))
+
+
+simulating the range(...) function
+  ((FIGURE 2))
+
+  in the implementation of my_range, the ENTIRE sequence:
+    - was completely calculated before the first iteration
+      - it will take a long time to build the list before we even begin the operations
+      - FOR function first evals/builds the collection, then calls the iter and next
+    - is stored (as a list), all at once in the memory
+      - we dont need the entire sequence all at once --> for this use we only need one element per iteration (the curr element being printed)
+
+
+generators
+  ((FIGURE 3))
+
+  - A generator is an iterator --> it continues from where it left off at every yield point in the function
+
+  - a generator is an iterator, that allows to break the execution:
+    - when yield is reached, a snapshot of the active data from is taken and stored
+      (together with the position from where the execution should later resume)
+      - yield kind of acts like a return statement, except it breaks out the current function
+        (but not before saving the current state of the function somewhere else so that it can get it later and keep going)
+    - when next is called, the data that was saved is restored, and the execution resumes from where it left off
+
+
+simulating the range(...) function (PART 2-- now with generators)
+((FIGURE 4))
+
+  - solves out problems
+    - yield allows us to calculate step by step, not all at once before
+    - at any given point you only have curr, not one big structure (list) holding the data in the memory
+
+    - when using generators, we perform "lazy evaluation", that produces an implicit iterable sequence. this sequence is used:
+      - holding execution and exposing an element, only when/if its needed
+        - ((FIGURE 5)) not required to have this code terminate, but if i make the arrangements to only expose the data i want, and use only part of it
+          (making external instructions for when to stop, etc)
+      - without constructing a data structure that stores the elements all at once in the memory
+
+      - good for when we want to handle big data
+
+((FIGURE 6))
+
+
+asymptotic analysis
+
+  primality testing
+
+    definition: let num>= 2 be an integer. we say that num is PRIME if tis only divisors are 1 and num
+      examples
+        13 is prime
+        12 is not prime
+
+    definition: let num>=2 be an integer, and let d and k be two divisors of num.
+                we say that k and d are COMPLEMENTARY DIVISORS or num, if d*k = num
+      examples
+        4 and 25 are complementary divisors of 100
+        5 and 20 are complementary divisors of 100
+        5 and 10 are NOT complementary divisors of 100 (but they are of 50)
+        NOT 3 and 33 1/3 --> are not divisors
+
+    Version 1: 1, 2, 3 ........ , num
+      ((FIGURE 7))

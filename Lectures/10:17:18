@@ -1,0 +1,142 @@
+******* ABSTRACTION AND DATA STRUCTURES ********
+
+Abstraction
+  - a key principle in the design of computational systems.
+  - provides a measure of separation of the implementation of an
+    entity from the interface for using it
+
+
+Procedural Abstraction
+  - consider a series of computational steps as an abstract unit
+
+  - interface
+    - ex: header line of a function
+    - ex: a sort function
+
+  - implementation
+    - ex: body of a function
+    - ex: all the different sort functions, all of which have different runtimes/space/etc
+
+
+Data Abstraction
+  - consider a collection of data as an abstract unit
+
+  - interface
+    - Abstract Data Type (ADT)
+      - specifies the type of data stored, and the operations supported
+        on it (from the user's point fo view)
+
+  - implementation
+    - data structure (coded as a class)
+      - concrete representation of data (from the point of view of an
+        implementer)
+
+
+
+
+
+******** Stacks ********
+
+The Stack ADT
+
+  - Data Model: A collection of items, that come out in a
+                LIFO (Last-In-First-Out) order
+
+  - Operations
+    - s = Stack() --> creates an empty stack
+    - len(s) --> returns the number fo items in s
+    - s.is_empty() --> returns True if s is empty, or False otherwise
+    - s.push(item) --> inserts item to s
+    - s.pop() --> removes and returns the item that was the last to enter s
+                  (out of all the items currently in s)
+                  or raises an Exception, if s is empty
+    - s.top() --> returns the item that was the last to enter s, the top item
+                  in the stack (out of all the items currently in s)
+                  or raises an Exception, if s is empty
+
+  ex: ((FIGURE 1))
+
+
+- The fundamental use of a stack is to do things in a reverse order
+  (ex: like when you're undo-ing something you've typed in google docs,
+  or like a runtime stack -- last function that started will be the first to end)
+
+
+ex: print_in_reverse(s) -- ((FIGURE 2))
+
+
+
+This data-structure ~implements~ the Stack ADT interface
+  --------------v--code--v----------------
+
+  class Array_Stack():
+
+    def __init__():
+      # ind_of_last_in
+        # dont want this, because then it becomes our responsibility to update
+        # this var
+        # instead, we can use the len - 1 operations from the list type
+
+      self.data = []
+
+    def __len__(self):
+      return len(self.data)
+
+    def is_empty(self):
+      return ( len(self) == 0 ) # dont need to ask for self.data, len would call self.data
+
+    def push(self, item):
+      self.data.append(item)
+
+    def pop(self):
+      if (self.is_empty() == True):
+        raise Exception('Stack is empty!')
+
+      return self.data.pop()
+
+    def top(self):
+      if (self.is_empty() == True):
+        raise Exception('Stack is empty!')
+
+      return self.data[-1] # last elem
+
+  --------------^--code--^----------------
+
+
+
+
+Stack Data-Structure
+
+  1. we use a list as our collection. we store the elements in the list
+      by the order they entered the stack
+
+  2. Runtime Analysis:
+      - Stack() --> 1
+      - len(s) --> 1
+      - s.is_empty() --> 1
+      - s.push() --> amortized 1 (worst case, list append is linear (n) time, but usually 1)
+      - s.pop() --> amortized 1 (worst case, list pop is linear (n) time, but usually 1)
+      - s.top() --> 1
+
+
+
+
+
+******** Break in Stacks to talk about Polish Notations ********
+
+infix: standard, what we're used to
+  - python is considered an infix programming language
+
+prefix:
+  - scheme is a prefix programming language
+
+
+infix                    postfix               prefix
+
+5                        5                     5
+5 + 2                    5 2 +                 + 5 2
+5 - (3 * 4)              5 3 4 * -             - 5 * 3 4
+(5 - 3) * 4              5 3 - 4 *             * - 5 3 4
+((5 + 2)*(8 - 3)) / 4    5 2 + 8 3 - * 4 /     / * + 5 2 - 8 3 4
+
+*****************************************************************

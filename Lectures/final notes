@@ -1,0 +1,80 @@
+Exam: Monday at 1pm
+
+Location: In main building gym
+
+all topics fro beginning of year
+
+topics not discussed not on test
+  - no avls
+  - no open addressing
+  - no splay trees
+  - no skip trees
+
+
+open addressing/linear probing (same thing)
+- instead of buckets, each ind in the hash map is checked, and if it has something move to the next one and check
+- basically just tries to insert the key, and just puts it in the next available ind
+
+
+hash maps
+- dont preserve order
+
+
+for q6
+- picture 1
+
+also look at lab 13 q3
+
+
+- note for heaps: dont need to code with it --> just draw them
+
+min heap runtimes
+- min --> 1, always the root
+- delete --> log(n), the actual deleting is 1 but the swaps of parent/child walking walkign down is log(n)
+- insert --> log(n), same reason for delete
+- max --> n, not a search tree so you have to actualyl go through and check them all
+
+
+
+- most of coding questions will probably be trees
+
+
+
+
+write a function that inverts a binary tree
+
+                4                     4
+              /   \                 /   \
+            7       3 ----->      3       7
+          /   \                         /   \
+        12      9                     9       12
+
+use ( to build from scratch):
+- breadth first
+- queue
+
+def invert_tree()
+ --> see picture
+
+
+
+
+
+- recursion is like using a call stack
+- putting all the layers in, the popping off the one on top (the most recent one) and using it in the next one
+
+
+**** QUESTIONS ****
+- will the professor show up next week
+- how much is the curve
+
+
+- will we have to do calculating runtimes (like the f(n) and g(n))
+
+- clarify playlist: is not a CHAINING hash table --> so how would we do it
+  (not same as hw9 q4)
+  - dont worry about the playlist
+
+- for linear probing, how do we keep track of where the item/key+value pair is put
+  - like if we want to get the key+value pair --> it would hash the key to the original
+    index (collision), not the correct index

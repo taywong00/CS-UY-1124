@@ -1,0 +1,143 @@
+*********** The Map ADT ***********
+
+The Map ADT
+
+  Model: A collection of values, each mapped by a key
+
+  Operations
+
+    - m = Map() -- creates an empty map
+    - m[k] = v -- adds value v with key k to m (insert method)
+                  if k already exists in m, it replaces the
+                  value already associated with k, to be v
+    - m[k] -- returns the value associated to k in m, (find method)
+              or raises KeyError, if k is not in m
+    - del m[k] -- removes the value associated to k in m (delete method)
+                  or raises KeyError, if k is not in m
+    - len(m) -- returns the number of entries in m
+    - iter(m) --  returns an iterator that allows to iterate over the keys in m
+
+
+
+    Data Structures for Map ADT
+
+      UnsortedArrayMap
+        - Find: θ(n)
+        - Insert: θ(n) -- starts with a find, if found change the value, else just add it to the end
+        - Delete: θ(n) -- also starts with a find, once you find it delete it, and then shift the values over
+
+      UnsortedLinkedListMap
+        - Find: θ(n) -- have to iterate just like UnsortedArrayMap
+        - Insert: θ(n)
+        - Delete: θ(n)
+
+      SortedArrayMap
+        - Find: θ(log(n)) -- binary search
+        - Insert: θ(n) -- find first θ(log(n)), but if you want to add a new entry then you have to shift everything over-- θ(n)
+        - Delete: θ(n) -- same as insert
+
+      SortedLinkedListMap
+        - Find: θ(n) -- we dont have random access (just because we have the first node, we cant look through the whole LinkedList at once)
+        - Insert: θ(n) -- start with find, adding (changing pointers) is constant
+        - Delete: θ(n) -- start with find, deleting (changing pointers) is constant
+
+
+
+    ((FIGURE 1))
+    ------------v code v------------
+
+    class UnsortedArrayMap:
+
+      class Item:
+
+        def __init__(self, key, value=None):
+          self.key = key
+          self.value = value
+
+
+      def __init__(self):
+        self.table = []
+
+      def __len__(self):
+        return len(self.table)
+
+      def is_empty(self):
+        return (len(self) == 0)
+
+      def __getitem__(self, key):
+        for item in self.table:
+          if (item.key == key):
+            return item.value
+
+        raise KeyError('Key Error ' + str(key))
+
+      def __setitem__(self, key, value):
+        for item in self.table:
+          if (item.key == key):
+            item.value = value
+            return
+
+        new_item = UnsortedArrayMap.Item(key, value)
+        self.table.append(new_item)
+
+      def __delitem__(self, key):
+        for i in range(len(self.table)):
+          if (self.table[i].key == key):
+            self.table.pop(i)
+            return
+
+        raise KeyError('Key Error ' + str(key))
+
+
+      def __iter__(self):
+        for item in self.table:
+          yield item.key
+
+
+    ------------^ code ^------------
+
+    ------------v test console v------------
+
+
+    m = UnsortedArrayMap()
+    m['ms14'] = 2.5
+    m['stb315'] = 3.7
+    m['ms14'] --> 2.5
+    m['ms14'] = 2.9
+    m['ms14'] --> 2.9
+    del m['ms14']
+    m['ms14'] --> KeyError: Key Error ms14
+
+    m['ip12'] = 3.4
+    for k in m:
+      print(k)
+
+    --> stb315
+    --> ip12
+
+    ------------^ test console ^------------
+
+
+
+
+
+
+*********** Binary Search Tree ***********
+
+Binary Search Tree
+
+  Definition: let T be a binary tree.
+              we say that T is a Binary Search Tree, if for each node n in T:
+
+                1. all keys stored in the left subtree of n are less than the key stored in n
+                2. all keys stored in the right subtree of n are greater than the key stored in n
+
+                ((FIGURE 2))
+
+
+
+
+
+
+
+                

@@ -1,0 +1,139 @@
+Example: Factorial ((FIGURE 1))
+
+Recursive Tree
+
+  structure
+  - each recursive call is represented as a node of the tree.
+    inside each node, we write the size of the input, that this
+    call was made with
+  - if a call 'A' directly calls 'B', we draw an edge connecting
+    the node representing 'A' to the node representing 'B'
+
+  cost
+  - to the side of each call, we write the local cost of that
+    recursive call (the cost without including the cost of the
+    recursive calls made by this call)
+    --> if we add up all the local costs, we get the total cost
+      of the recursive process
+
+Example: count_appearances --> ((FIGURE 2))
+  - assumption:
+    when calling count_appearances on a smaller list, it would
+    return the number of times the value shows up in that shorter
+    list
+
+
+  - reboot version for better time (with indices instead of slicing):
+
+    --------------v--code--v----------------
+
+    def count_appearances(lst, val, low, high):
+      if (low = high): # list of 1 elem
+        if (lst[low] == val):
+          return 1
+        else:
+          return 0
+
+      else: # more than 1 elem in lst
+        rest_count = count_appearances(lst, val, low + 1, high)
+        if (lst[low] == val):
+          return rest_count + 1
+        else:
+          return rest_count
+
+    --------------^--code--^----------------
+
+      ((FIGURE 3)) --> recursive tree for reboot
+
+
+  ORIGINAL VERSION:
+    - og works for empty list, reboot doesnt
+    - as a user, wouldnt want to have to pass low/high values
+      --> it shouldnt be the users job to provide these, the user
+          should only want the better interface, for passing the
+          arguments they need
+      --> the coders justification would be that its a better
+          runtime, but it wouldnt be the users problem to worry about
+          runtime, thats up to the coder, the user just wants to use
+          the best function (for ease to use and runtime)
+
+  REBOOT VERSION:
+    - doesnt work for empty list
+
+
+
+
+  SO THE BEST VERSION:
+    - would be to make the reboot a helper function, so...
+
+    --------------v--code--v----------------
+    def count_appearances(lst, val):
+      if (len(lst) == 0):
+        return 0
+      else:
+        return count_appearances_helper(lst, val, 0, len(lst) - 1)
+
+    def count_appearances_helper(lst, val, low, high):
+      if (low = high): # list of 1 elem
+        if (lst[low] == val):
+          return 1
+        else:
+          return 0
+
+      else: # more than 1 elem in lst
+        rest_count = count_appearances(lst, val, low + 1, high)
+        if (lst[low] == val):
+          return rest_count + 1
+        else:
+          return rest_count
+    --------------^--code--^----------------
+
+    notes:
+      count_appearances
+        - is not recursive because it doesnt call itself
+      count_appearances_helper
+        - IS recursive becasue it calls itself
+
+    you also want to NOT give the user access to the helper.
+    so to keep it out of their scope, you can define it in function
+    you need it for as its own local function:
+
+    --------------v--code--v----------------
+    def count_appearances(lst, val):
+
+      # put this helper inside the original function,
+      # to keep it out of the user's scope
+      # it is now a local function for only count_appearances's use
+
+      def count_appearances_helper(lst, val, low, high):
+        if (low = high): # list of 1 elem
+          if (lst[low] == val):
+            return 1
+          else:
+            return 0
+
+        else: # more than 1 elem in lst
+          rest_count = count_appearances(lst, val, low + 1, high)
+          if (lst[low] == val):
+            return rest_count + 1
+          else:
+            return rest_count
+
+
+
+      if (len(lst) == 0):
+        return 0
+      else:
+        return count_appearances_helper(lst, val, 0, len(lst) - 1)
+
+    --------------^--code--^----------------
+
+
+
+
+~~~~~~~~~~~~~~ CHANGING EXAMPLES ~~~~~~~~~~~~~~~~~~
+
+Example: Power function ((FIGURE 4))
+
+--> can we reboot to make it even faster?
+  ((FIGURE 5))

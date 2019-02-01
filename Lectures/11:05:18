@@ -1,0 +1,200 @@
+------------v-- code --v-------------
+
+class DoublyLinkedList:
+    class Node:
+        def __init__(self, data=None, prev=None, next=None):
+            self.data = data
+            self.prev = prev # reference to node before (previous)
+            self.next = next # reference to node after (next)
+
+        def disconnect(self):
+            self.data = None
+            self.prev = None
+            self.next = None
+
+
+    def __init__(self):
+        self.header = DoublyLinkedList.Node()
+        self.trailer = DoublyLinkedList.Node()
+        self.header.next = self.trailer
+        self.trailer.prev = self.header
+        self.size = 0
+
+    def __len__(self):
+        return self.size
+
+    def is_empty(self):
+        return len(self) == 0
+
+    def first_node(self):
+        if(self.is_empty()):
+            raise Exception("List is empty")
+        return self.header.next
+
+    def last_node(self):
+        if(self.is_empty()):
+            raise Exception("List is empty")
+        return self.trailer.prev
+
+    def add_after(self, node, data):
+        prev = node
+        succ = node.next
+        new_node = DoublyLinkedList.Node(data, prev, succ)
+        prev.next = new_node
+        succ.prev = new_node
+        self.size += 1
+        return new_node
+
+    def add_first(self, data):
+        return self.add_after(self.header, data)
+
+    def add_last(self, data):
+        return self.add_after(self.trailer.prev, data)
+
+    def add_before(self, node, data):
+        return self.add_after(node.prev, data)
+
+    def delete_node(self, node):
+        pred = node.prev
+        succ = node.next
+        pred.next = succ
+        succ.prev = pred
+        self.size -= 1
+        data = node.data
+        node.disconnect()
+        return data
+
+    def delete_first(self):
+        if (self.is_empty()):
+            raise Exception("List is empty")
+        return self.delete_node(self.first_node())
+
+    def delete_last(self):
+        if (self.is_empty()):
+            raise Exception("List is empty")
+        return self.delete_node(self.last_node())
+
+    def __iter__(self):
+        if (self.is_empty()):
+            return
+        cursor = self.first_node()
+        while cursor is not self.trailer:
+            yield cursor.data
+            cursor = cursor.next
+
+------------^-- code --^-------------
+
+
+------------v-- code --v-------------
+
+import DoublyLinkedList
+
+lnk_lst = DoublyLinkedList.DoublyLinkedList()
+lnk_lst.add_after(1)
+lnk_lst.add_after(2)
+lnk_lst.add_after(3)
+print()
+
+sum = 0
+for elem in lnk_lst:
+  sum += elem
+
+print(sum)
+
+print(lnk_lst) # if we try to print it as it is right now, it prints reference to the doubly linked list in the memory
+
+------------^-- code --^-------------
+
+
+so lets try to implement our own/override the repr function
+
+------------v-- code --v-------------
+# in doubly linked list class
+
+    def __repr__(self):
+
+        # it might seem weird to make a new list to print the string, but we have no way around that
+        # we're building one long string block
+        str_elem_lst = [str(item) for item in self]
+
+        res_str = "[" + " <--> ".join(str_elem_lst) + "]"
+        return  res_str
+
+------------^-- code --^-------------
+
+
+
+
+now if we want to do the print:
+
+------------v-- code --v-------------
+print(lnk_lst) # shows as [1 <--> 2 <--> 3]
+------------^-- code --^-------------
+
+
+
+
+lets add some methods that work with doubly linked lists
+
+
+------------v-- code --v-------------
+# note this is a function, not a method
+# function: more global, not specific to a class
+# method: specific to a certain class
+
+
+def remove_all(lnk_lst, val):
+  if (lnk_lst.is_empty()):
+    return # break out of the function
+
+  cursor = lnk_lst.first_node()
+  while(cursor is not lnk_lst.trailer):
+    if (cursor.data == val):
+      next_node = cursor.next
+      lnk_lst.delete_node(cursor.prev)
+      cursor = next_node
+    else:
+      cursor = cursor.next
+
+
+
+def max_in_lnk_list(lnk_lst):
+
+    # just like our helper for the max_in_array_list, max_in_array_list2,
+    # we should make a helper here where since we cant slice
+    # we pass the current head and just change the bounds that we're checking
+
+    # this is nested inside the max_in_lnk_list function, so that the user cant touch it
+    def max_in_lnk_list_helper(lnk_lst, sublist_head):
+      if (sublist_head is lnk_lst.last_node()):
+        return sublist_head.data
+      else:
+        rest_max = max_in_lnk_list_helper(lnk_lst, sublist_head.next)
+        return max(sublist_head.data, rest_max)
+
+
+
+    if (lnk_lst.is_empty()):
+      raise Exception("Linked List is Empty!")
+
+    return max_in_lnk_list_helper(lnk_lst, lnk_lst.first_node())
+
+
+# ((FIGURE 1)) -- Recursive tree for max_in_lnk_list
+
+
+def max_in_array_list(lst):
+  if (len(lst) == 1):
+    return lst[0]
+  else:
+    rest_max = max_in_array_list(lst[1:]) # not good because it is O(n), making total time O(n)
+    return max(lst[0], rest_max)
+
+
+def max_in_array_list2(lst, low, high): # alternative implementation for max_in_array_list to make it more efficient
+  if (...):...
+  else:
+    rest_max = max_in_array_list2(lst, low+1, high-1)
+
+
+------------^-- code --^-------------

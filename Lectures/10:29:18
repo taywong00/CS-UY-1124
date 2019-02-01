@@ -1,0 +1,80 @@
+Dynamic Arrays
+
+  Pros
+    - random access
+    - efficient amortize performance for adding and removing
+      from the end
+  Cons
+    - storing data contiguously in the memory can be a problem
+      when working with a VERY big data set
+    - insertions and deletions at interior positions of an array are
+      expensive
+    - amortized bounds may be unacceptable in real-time systems
+
+********************* Linked Lists *********************
+((FIGURE 1))
+- instead of storing items contiguously, maybe we can store each
+  item wherever available, and then just use a pointer to reference
+  to the next item
+- but now we no longer have random access
+
+
+
+********** SIGLY LINKED LIST (single link, going one way) **********
+Ex: lets create ((FIGURE 2))
+--------------v--code--v----------------
+
+class Node:
+  def __init__(self, data=None, next=None):
+    self.data = data
+    self.next = next
+
+head1 = None
+head1 = Node()
+head1.data = 1
+head1.next = Node()
+head1.next.data = 2
+head1.next.next = Node()
+head1.next.next.data = 3
+
+curr_node = head1
+
+# dont compare references with != or ==, because it compares contents/values
+# instead use "is"/"is not" ((FIGURE 3))
+while (curr_node is not None):
+  print (curr_node.data)
+  curr_node = curr_node.next()
+
+new_node = Node()
+new_node.data = 4
+new_node.next = head1
+head1 = new_node
+
+# worst case constant time
+def add_first(lnk_lst, val):
+  new_node = Node()
+  new_node.data = val
+  new_node.next = lnk_lst
+  return new_node
+
+head1 = add_first(head1, 5)
+
+
+
+# but worst case adding to the end will be linear
+# because you have to trace through all the links to the end
+# SO we should add a tail (the last element) as a data member
+# to the linked list (so now we have a head and tail), so we can make
+# it faster to add to the end
+--------------^--code--^----------------
+
+
+
+
+********** DOUBLY LINKED LIST (double linked, going both ways) **********
+- where each node is linked to both the next and previous node
+- but we lose random access
+
+- start and end with dummy nodes with no data --> the header and trailer
+- this way this will reduce the number of edge cases, will not be considered
+- as actual items of the list (like not considered in length)

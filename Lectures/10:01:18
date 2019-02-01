@@ -1,0 +1,203 @@
+NOTE: all code/python console snippets are continuous from those before them
+
+we use an array in order to gain random access
+  (any element at any index immediately, because they are stored
+  contiguously with the same amount of bytes based on the base address)
+
+  downside:
+    you cant append
+
+  the sequence of n appends in linear time not quadratic
+  (in worst case of n times, amortized)
+
+  (ref FIGURE 4-7 from 9/26)
+
+(from 9/26)
+
+#---------v--code--v--------
+import ctypes # provides low-level arrays
+def make_array(n):
+  return(n * ctypes.py_object)()
+#---------^--code--^--------
+
+#---------v--python console--v--------
+>>> arr = make_array(8)
+>>> arr[0] = 5
+>>> arr[0]
+    --> 5
+>>> arr.append(7)
+    --> attribute error, cant append because its a lower level structure/container
+#---------^--python console--^--------
+
+#---------v--code--v--------
+class MyList:
+  def __init__(self):
+    #called automatically on construction time to initialize the data members
+    #((FIGURE 1))
+    self.data = make_array(1)
+    self.n = 0
+    self.capacity = 1
+
+  def append(self, val):
+    if (self.n == self.capacity): #we cant add val, it would be out of range --> we need to resize
+      self.resize(2 * self.capacity)
+
+    self.data[self.n] = val
+    self.n += 1
+
+  def resize(self, new_size):
+    new_data = make_array(new_size) # new array
+    for i in range(self.n): # copy data
+      new_data[i] = self.data[i]
+
+    self.data = new_data
+    self.capacity = new_size
+
+
+lst1 = MyList()
+for i in range(5):
+  lst1.append(10*(i+1))
+
+#---------^--code--^--------
+
+#---------v--python console--v--------
+>>> lst1.n
+--> 5
+>>> lst1.capacity
+---> 8
+>>>lst1[3]
+--> TypeError: 'MyList' object does not support indexing --> we didnt specify how to index when we built the object
+#---------^--python console--^--------
+
+
+we can use math-like operators (built our own primary methods, list in textbook)
+  ex:
+    x + y --> build __add__() method
+
+  so for x[key] or x[key] = val --> __getitem()__ and __setitem__()
+
+#---------v--code--v--------
+  def __getitem__(self, ind):
+    return self.data[ind]
+
+  def __setitem__(self, ind, value):
+    self.data[ind] = value
+#---------^--code--^--------
+
+#---------v--python console--v--------
+>>> lst1[3]
+--> 40
+>>> lst1[3] = 400
+>>> lst1[3]
+--> 400
+
+>>> lst1[10]
+--> IndexError: invalid index --> array object itself threw this exception, we didnt
+
+>>> lst1[6]
+--> ValueError: PyObject is NULL
+#---------^--python console--^--------
+
+#---------v--code--v--------
+  # NOTE THIS IS A MODIFICATION OF PREVIOUS __getitem__()
+  def __getitem__(self, ind):
+    if not (0 <= ind <= (self.n - 1)): # note: dont care about negative indices
+      raise IndexError(str(ind) + " is an out of range index") # in parenthesis: the string you want to print stating your error
+
+    return self.data[ind]
+
+  # NOTE THIS IS A MODIFICATION OF PREVIOUS __setitem__()
+  def __setitem__(self, ind, value):
+    if not (0 <= ind <= (self.n - 1)): # note: dont care about negative indices
+      raise IndexError(str(ind) + " is an out of range index") # in parenthesis: the string you want to print stating your error
+
+    self.data[ind] = value
+#---------^--code--^--------
+
+
+#---------v--python console--v--------
+>>> lst1[10]
+--> IndexError: 10 is an out of range index
+
+>>> lst1[6]
+--> IndexError: 6 is an out of range index
+#---------^--python console--^--------
+
+
+NOTE: when you give an object an indexing skill, python automatically gives it the ability to be iterated
+  - but we should still learn how to make our own support for iterations like for loops
+  - so..... below!
+
+#---------v--code--v--------
+  def __iter__(self): # make generator whereby iter can be called to make an iterable
+    for i in range(self.n):
+      yield self.data[i]
+
+#---------^--code--^--------
+
+#---------v--python console--v--------
+>>>for elem in lst1:
+--> 10
+--> 20
+--> 30
+--> 40
+--> 50
+>>>len(lst1)
+--> TypeErrorL object of tyoe 'MyList' has no len()
+#---------^--python console--^--------
+
+
+#---------v--code--v--------
+  def __len__(self):
+    return self.n
+
+#---------^--code--^--------
+
+#---------v--python console--v--------
+>>>len(lst1)
+--> 5
+#---------^--python console--^--------
+
+
+#---------v--code--v--------
+  def extend(self, other): # simulate what happens in a list: mutates the existing list (not create new one)
+    for elem in other:
+      self.append(elem) # this is the best implementation, instead of combining size fo self and other, and then doubling the size of a new list based on that--> combined size
+
+#---------^--code--^--------
+
+
+
+a few words on pop method...
+  - we dont have to resize
+
+   but the issues are:
+    - memory/space
+        - we build up all this space with append/extending, but later if you pop all these items off, the space that you took up before stays the same/taken up
+        - we need to be able to reduce the size
+        - the implementation we have above, works for both big and small sizes (because we assign new_size)
+          - we can do 'if the size is only 1/4 full, halve the size of the array'
+
+
+
+************* topic change! ****************
+
+
+Insertion Sort
+- partition sort with the first half being sorted and just inserting each item where they belong in the sorted part
+((FIGURE 2))
+
+#---------v--code--v--------
+def insertion_sort(lst):
+  for curr_ind in range(1, len(lst)):
+    curr_item = lst[curr_ind]
+
+    j = curr_ind
+    while(j >= 1 and lst[j-1] > curr_item):
+      lst[j] = lst[j-1]
+      j -= 1
+    lst[j] = curr_item
+
+#---------^--code--^--------
+
+--> Runtime: Theta(n^2)

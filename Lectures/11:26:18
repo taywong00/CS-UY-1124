@@ -1,0 +1,182 @@
+class BinarySearchTreeMap: # supporting the Map ADT
+
+  class Item:
+    def __init__(self, key, value=None):
+      self.key = key
+      self.value = value
+
+  class Node:
+    def __init__(self, item):
+      self.item = item
+      self.left = None
+      self.right = None
+      self.parent = None
+
+    def num_children(self): # count how many children self has
+      count = 0
+      if (self.left is not None):
+        count += 1
+      if (self.right is not None):
+        count += 1
+      return count
+
+    def disconnect(self): # makes no references so that it this thrown out node can be collected by the garbage collector
+      self.item = None
+      self.left = None
+      self.right = None
+      self.parent = None
+
+
+
+  def __init__(self):
+    self.root = None
+    self.size = 0
+
+  def __len__(self):
+    return self.size
+
+  def is_empty(self):
+    return (self.size == 0)
+
+
+  # return the value associated with key or raises exception if key is not in the tree
+  def __getitem__(self, key):
+    node = self.find(key)
+    if (node is None):
+      return node.item.value
+    # missing some code here
+
+
+  # returns the node containing the key
+  # or None if the key is not in the tree
+  # this helper method has more general uses, but we are giving it to the user how they want it for getting an item in the map
+  def find(self, key):
+    curr = self.root
+    while():
+      if (key == curr.item.key):
+        return curr
+      elif (key < curr.item.key):
+        curr = curr.left
+      else:
+        curr = curr.right
+
+    return None
+
+
+  def __setitem__(self, key, value):
+    # missing some code here
+
+    if (key < parent.item.key):
+      parent.left = new_node
+    else:
+      parent.right = new_node
+    new_node.parent = parent
+    self.size += 1
+
+
+  # removes entry with key from the tree,
+  # or raises an exception if key is not in the tree
+  def __delitem__(self, key):
+    node = node.self.find(key)
+    if (node is not None):
+      self.delete_node(node)
+    else:
+      raise KeyError(str(key) + ' is not found')
+
+  def delete_node(self, node_to_delete):
+    item = node_to_delete.item
+    num_children = node_to_delete.num_children()
+
+    if (node_to_delete is self.root):
+      if (num_children == 0): # tree of just root
+        self.root = None
+        node_to_delete.disconnect()
+        self.size -= 1
+
+      elif (num_children == 1):
+        if (self.root.left is not None): # only child is left
+          self.root = self.root.left
+        else: # only child is right
+          self.root = self.root.right
+        self.root.parent = None # change new root pointer, has no parent as root
+
+        node_to_delete.disconnect()
+        self.size -= 1
+
+      else: # num_children = 2
+        max_of_left = self.subtree_max(node_to_delete.left)
+        node_to_delete.item = max_of_left.item
+        self.delete_node(max_of_left)
+
+
+    else:
+      if (num_children == 0): # remove a leaf
+        parent = node_to_delete.parent
+        if (parent.left is node_to_delete): # is not ==, comparing references
+          parent.left = None
+        else: # parent.right is node_to_delete
+          parent.right = None
+        node_to_delete.disconnect()
+        self.size -= 1
+
+
+      elif (num_children == 1):
+        parent = node_to_delete.parent
+
+        # get my single child
+        if (node_to_delete.left is not None): # my child is left
+          child = node_to_delete.left
+        else: # my child is right
+          child = node_to_delete.right
+
+        # point my parent to my child
+        if (node_to_delete is parent.left) # im a left child, set new parent.left
+          parent.left = child
+        else: # im a right child, set new parent.right
+          parent.right = child
+
+        # we've pointed the parent to the child, now we need to point the child to the parent
+        child.parent = parent
+
+        node_to_delete.disconnect()
+        self.size -= 1
+
+
+
+      else: # num_children == 2
+        # instead of entirely swapping nodes
+        # we should just take the max from the left subtree and make the value of the node_to_delete the max of the left
+        # alternatively, we could also take the lowest value from the right subtree
+        # this implementation will take the max from the left subtree
+
+        max_of_left = self.subtree_max(node_to_delete.left) # max of the left subtree
+        node_to_delete.item = max_of_left.item
+
+        self.delete_node(max_of_left) # technically this is recursive call, but its not a recursive function because this is only a max nesting of 1--> should only make addressing the first two cases, which dont continue the recursion
+
+    return item
+
+
+  def subtree_max(self, subtree_root):
+    curr = subtree_root
+    while(curr.right is not None):
+      curr = curr.right
+    return curr
+
+
+
+  def inorder(self):
+        yield from self.subtree_inorder(self.root)
+
+  def subtree_inorder(self, root):
+      if(root is None):
+          return
+      else:
+          yield from self.subtree_inorder(root.left)
+          yield root
+          yield from self.subtree_inorder(root.right)
+
+
+  def __iter__(self):
+    for node in self.inorder():
+      yield node.item.key

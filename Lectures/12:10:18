@@ -1,0 +1,103 @@
+
+******* PRIORITY QUEUE ADT **********
+
+Priority Queue ADT
+
+Data Model:
+  a collection of priority value pairs, that come out in an
+  increasing priorities order
+
+Operations:
+  - p = PriorityQueue() --> creates an empty priority queue
+  - p.insert(pri, val) --> inserts an item with priority pri and value val to p
+  - p.min() --> returns the pair (pri, val) with the lowest priority in p,
+                or raises an Exception if p is empty
+  - p.delete_min() --> removes and returns the pair (pri, val) with the lowest
+                        priority in p,
+                        or raises an Exception if p is empty
+  - len(p) --> returns the number of items in p
+  - p.is_empty --> returns True if p is empty, False otherwise
+
+
+
+Minimum Priority Queue (the one we're doing)
+  p = MinPriorityQueue()
+  len(p)
+  p.is_empty()
+  p.insert(pri, val)
+  p.min()
+  p.delete_min()
+
+
+but there is also....
+
+Maximum Priority Queue
+  p = MaxPriorityQueue()
+  len(p)
+  p.is_empty()
+  p.insert(pri, val)
+  p.max() --> same as min, but using max priorities
+  p.delete_max() --> same as min, but using max priorities
+
+
+
+Data Structures for Priority Queue ADT
+
+  Unsorted Linked List
+    - min: θ(1)  --> use another ref var to the min
+    - insert: θ(1)
+    - delete min: θ(n) --> finding the new min
+
+  Sorted Linked List
+    - min: θ(1)--> use another ref var to the min
+    - insert: θ(n) --> figuring out where the new item is put
+    - delete min: θ(1)
+
+  Balanced Search Tree
+    - min: θ(1) --> use another ref var to the min
+    - insert: θ(log(n))
+    - delete min: θ(log(n)) --> finding the new min
+
+  Heap (NEW STRUCTURE)
+    - min: θ(1)--> use another ref var to the min
+    - insert: θ(log(n)) --> figuring out where the new item is put
+    - delete min: θ(log(n))
+
+
+
+
+
+
+********** Heap **********
+
+Heap
+
+  let T be a binary tree. we say that T is a Heap if it satisfies:
+
+    1. Heap order property -- in every node n of T, the priority
+                              in n is less than or equal to the
+                              priorities in n's children.
+
+    2. Nearly-complete property -- if h is the height of T, then
+                                    all levels 0, 1, 2, ..., h-1
+                                    have the maximum number of nodes
+                                    possible (that is, level i has
+                                    2^i nodes), and the remaining
+                                    nodes, at level h, reside in
+                                    the leftmost possible positions
+
+  Important observations:
+    1. the min item would be in the root of the heap
+    2. if a heap stores n elements, and if the height of
+        the heap is h, then h = θ(log(n))
+
+
+  using an array structure
+
+  - note: ignore index 0
+
+  left(ind) = 2*ind
+  right(ind) = 2*ind + 1
+  parent(ind) = ind // 2
+
+  see photo!!

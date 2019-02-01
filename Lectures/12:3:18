@@ -1,0 +1,186 @@
+
+Data Structures for Map ADT
+
+  UnsortedArrayMap
+    - Find: θ(n)
+    - Insert: θ(n) -- starts with a find, if found change the value, else just add it to the end
+    - Delete: θ(n) -- also starts with a find, once you find it delete it, and then shift the values over
+
+    - Space: θ(n)
+
+  UnsortedLinkedListMap
+    - Find: θ(n) -- have to iterate just like UnsortedArrayMap
+    - Insert: θ(n)
+    - Delete: θ(n)
+
+    - Space: θ(n)
+
+  SortedArrayMap
+    - Find: θ(log(n)) -- binary search
+    - Insert: θ(n) -- find first θ(log(n)), but if you want to add a new entry then you have to shift everything over-- θ(n)
+    - Delete: θ(n) -- same as insert
+
+    - Space: θ(n)
+
+  SortedLinkedListMap
+    - Find: θ(n) -- we dont have random access (just because we have the first node, we cant look through the whole LinkedList at once)
+    - Insert: θ(n) -- start with find, adding (changing pointers) is constant
+    - Delete: θ(n) -- start with find, deleting (changing pointers) is constant
+
+    - Space: θ(n)
+
+
+
+  BinarySearchTreeMap
+    - Find: θ(n) (or θ(h), where h is height) -- it goes down one path
+    - Insert: θ(n) (or θ(h))
+    - Delete: θ(n) (or θ(h), might be 2n/2h because we might have to do this twice, but write cost as n/h)
+
+    this is disappointing...
+      - but there are other implementations that are more efficient
+
+    - Space: θ(n)
+  AVLTreeMap # look these up online!
+    - Find: θ(log(n))
+    - Insert: θ(log(n))
+    - Find: θ(log(n))
+
+    - Space: θ(n)
+
+
+  Bucket Array
+    - Find: θ(1)
+    - Insert: θ(1)
+    - Find: θ(1)
+
+    - Space: Could be large, relative to n (n is the key)
+
+    --> problems
+          - we dont know what the domain is
+          - not all domains could stand as integers (and therefore
+            indices)
+            - requirement is that the integer indices are the keys
+              (so netIDs couldnt be keys)
+          - so additionally, the size can be really big --> if you
+            wanted to key/value to SSN/gpa, then the 0-biggest SSN
+            will be the size of biggest SSN, even if we only have
+            20 students to enter values for
+
+
+  Hash Table
+  - Find: θ(1) -- constant average time, not worst case
+  - Insert: θ(1) -- constant average time, not worst case
+  - Delete: θ(1) -- constant average time, not worst case
+
+  - Space: θ(n)
+
+
+
+
+************** Hash Table **************
+
+((FIGURE 1, picture 1))
+  - U
+    - Universe (domain) from which the keys will be taken
+  - T = [None] * N
+    - Hash table of N slots, where the entries will be stored
+  - h: U --> {0, 1, ... (N-1)}
+    - hash function that maps keys from the universe to slots
+      in the table
+
+  - insert(key, value):
+      i = h(key)
+      T[i] = value
+
+  - find(key):
+      i = h(key)
+      return T[i]
+
+
+  - The Collisions Problem:
+    - multiple keys could be mapped to the same slot (maps the
+      large domain to a small range)
+
+  --> an easy solution:
+    - chaining-- store all entries that are mapped to the same
+      slot, in some secondary collection
+
+  - Problem: when using chaining, a lot of keys could end up
+    being stored at the same slot --> bad performance
+  - Solution: use a "good" has function (a function that evens
+    out the collisions)
+    |
+    v
+  Uniform Hash Function:
+    - a function that when given a randomly chose key, it will
+      be equally likely mapped to any of the N slots of T,
+      independently of where any other key has hashed to it
+
+
+
+
+Hash Functions (FIGURE 2, picture 2/3/4)
+
+Coding Functions
+  - h1: U --> (64-bit integers)
+
+  - common approaches ((FIGURE 3, picture 5))
+
+    - integer casting
+      - look at the binary representation of key,
+      - take the 8 leasy significant bytes, and interpret
+        it as a 64-bit 2's complement number
+
+        - prpblem:
+          - the approach ignores part of the data.
+          - in a biased set of keys, these parts could be there the keys differ
+          - we need something that takes thw whole value of the key into consideration
+
+    - component sum
+      - break key into its components: key = (k0, k1, k2,..., k(m-1)) (nums subscripted)
+      - the coding function h1 would add all the components of key
+      - that is: h1(key) = k0 + k1 + k2 + ... + k(m-1)
+
+      - ex:
+        - "stop" --> split of the ascii values of all the letters and add them up
+
+      - problem:
+        - all the anagrams would be mapped to the same thing (ex: tops, pots, etc; so all the combos of those letters would be the same)
+        - this approach doesnt take the positions of the components into account
+
+
+    - polynomial accuulation
+      - let z be an integer >= 2
+      - to code key, break it into its components: key = (k0, k1, k2, ..., k(m-1))
+      - we define: h1(key) = k0*(z^0) + k1*(z^1) + ... + k(m-1)*(z^(m-1))
+          - this takes the positions of the components into account, we are doing this by altering all the letters in a certain positions by multiplying them by values of z
+
+      - fun fact: if we take z = 33, when coding 50,000 english words, we have at most 6 collisions
+
+  - python's built in coding function: hash(key)
+    - can be called with built-in immutable types (int, str, float, tuple)
+    - user defined classes are unhashable, unless they overload the __hash__ method
+    - make sure that (x = y) --> hash(x) = hash(y)
+
+
+
+
+Compression Functions
+
+  - Common approaches:
+
+    - The Division Method: (FIGURE 4, picture 6)
+      - we define: h2(k) = k mod N
+        - if keys are chosen randomly --> satisfies the "uniform hashing" property
+        - long chains might be created, keys are biased
+
+    - The Multiply-Add-and-Divide (MAD) Method (online slide)
+      - let p be a prime number, p > |U|
+      - let a be a random number from {1, 2, ..., p - 1}
+      - let b be a random number from {0, 1, 2, ..., p - 1}
+      - we define: h2(k) = [(ak + b) mod p] mod N
+
+      - ex: if |U| = 60
+            the keys are: {0, 5, 10, 15 20, 25, 30, 35, 40, 45, 50, 55, 60}
+            we choose: p = 101, a, = 30, b = 6
+            for a table of size N = 10: h2(k) = [(30k + 6) mod 100] mod 10

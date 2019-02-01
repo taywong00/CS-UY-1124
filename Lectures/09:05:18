@@ -1,0 +1,137 @@
+09/05/18
+
+itay.tal@nyu.edu
+
+office hours: wednesday 6-7pm + by appointment
+
+labs: are not graded on the quality or how well they work, but how hard you work/attendance/participation
+
+python version: 3.x
+
+IDE: pycharm or IDLE
+
+review python: lessons on nyu classes and chapters 1,2 of textbook
+
+
+data
+    build-in types
+      int ((SEE FIGURE 1))
+        --> immutable
+        java
+          if you turn x = 7
+          the value of x itself becomes 7, the 3 is erased
+        python
+          if you turn x = 7
+          the 3 isnt erased, the it 7 is just created and the x points to the new 7 object instead of 3
+      float
+        -->immutable
+      bool
+        -->immutable
+      str
+        -->immutable
+        --> iterable collection
+        ((SEE FIGURE 4))
+      list ((SEE FIGURE 2))
+        --> are mutable (when variables are changed, the old values get erased completely and are replaced by the new values)
+        EX1:
+          list = [1, 2, 3]
+          for elem in list:
+            elem += 10
+          print (list) --> [11, 12, 13]
+
+        EX2: ((SEE FIGURE 3))
+          list1 = [1, 2, 3]
+          list2 = list1
+          list3 = [1, 2, 3]
+          list1.append(4)
+          list2.append(5)
+          list3.append(6)
+          print(list1)
+          print(list2)
+          print(list3)
+      tuple
+        -->immutable
+      dict
+        --> mutable
+
+  expressiosn
+    i/o expressions
+    assignment
+    arithmetic expressions
+    boolean expressions
+
+  control flow
+    sequential
+    branching
+      if
+      if else
+      if elif else
+    iterative
+      while
+      for
+    function calls
+    exceptions
+
+  programmer defined types (classes)
+    ex: ((SEE FIGURE 1))
+      java
+        int x; --> creating an int var --> restricted to keeping this var of type int
+        x = 3; --> assigning the int var x to the int value 3
+      python
+        x = 3
+          variables reference the data, do not store the data --> references the 3, and the 3 has the data of being an int. the var x is not type int itself
+          --> the var doesnt have to stay an int, you can change it to a string if you wanted or any other types
+
+
+  mutable
+  -- changes made to mutable objects in functions will be changed in the broader scope variables
+
+  immutable
+  -- changes made to IMmutable objects in functions will NOT be changed in the broader scope variables
+
+
+MUTATION vs CONSTRUCTION
+  mutating the list
+    indexed assignment (lst[i] = _)
+
+    append method (append to end)
+
+    insert method (append to certain index)
+
+    pop (from end or at index)
+
+    reverse method (reverses elements in list)
+
+    sort method (sort in increasing method)
+
+    extend method
+      you simply add to the end of the list -> doesnt change the id of the list (concatinate changes the id, see 09/10/18 and 09/10/18 figure 1)
+
+    += operator
+      --> does not change id
+
+
+  constructing new lists
+    list literals ([1, 2, 3], [])
+
+    list constructor (list(...))
+
+    + operator ((SEE FIGURE 5))
+
+    * operator --> constructs a new object (ex list) pointing to the old values, like with + operator
+
+    slicing (lst[_:_]) --> constructs a new object (ex list) pointing to the old values, like with + operator
+
+    copy.copy function ((SEE FIGURE 6)) --> constructs a new object (ex list) pointing to the old values, like with + operator
+      kinds of copies (it takes different syntax to make one vs the other)
+        shallow copy
+          a new object or container is created, but the contents point to the original data
+          syntax
+            1) copy method
+            2) import copy
+                copy.copy(...) function
+        deep copy
+          a copy is created for both the container and for the contents -- not referencing odl, makes completely new data
+          syntax
+            1) import copy
+                copy.deepcopy()

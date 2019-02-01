@@ -1,0 +1,111 @@
+
+((FIGURE 1))
+
+--------------v--code--v----------------
+
+def merge_sort(lst):
+
+  # make this a local function so the user doesnt have access to it
+  # --------v-- helper function --v---------
+
+  def merge_sort_helper(lst, low, high): # low/high are the indices of the sublists were considering, that way we can mutate the existing list, not making a new list
+    if (low == high):
+      return
+    mid = low + high // 2
+
+    else: # sort according to 3 steps
+      # steps 1 and 2
+      merge_sort_helper(lst, low, mid) # dont need to assign it to a var, it mutates the list internally
+      merge_sort_helper(lst, mid + 1, high)
+
+      #merge the two halves, step 3
+      merge(lst, low, mid, high)
+
+  # --------^-- helper function --^---------
+
+  # --------v-- merge function --v---------
+
+  # it makes sense to put it inside because even though the merge function could potentially be helpful to the user for other uses
+  # the implementation we gave here was so specific to this use, it wouldnt really be useful in other cases
+  # maybe a different,  more general implementation of merge would be helpful
+
+  def merge(lst, low_left, high_left, high_right):
+    low_right = high_left + 1
+    i_left = low_left
+    i_right = low_right
+    merged_list = []
+
+    # left index and right index are in our range, we have 2 candidates to choose from
+    while (i_left <= high_left and i_right <= high_right):
+      if (lst[i_left] < lst[i_right]):
+        merged_list.append(lst[i_left])
+        i_left += 1
+      else:
+        merged_list.append(lst[i_right])
+        i_right += 1
+
+    # taking care of the tails
+    while (i_left <= high_left): #takign care of the tails
+      merged_list.append(lst[i_left])
+      i_left += 1
+    while (i_left <= high_left): #takign care of the tails
+      merged_list.append(lst[i_right])
+      i_right += 1
+
+    # copy all the elements from the new merged_list object into the elements in the appropriate range in lst, lowest to greatest (in order)
+    for i in range(len(merged_list)):
+      lst[low_left + i] = merged_list[i_right]
+
+  # --------^-- helper function --^---------
+
+
+  # FINALLY THE ACTUAL CODE OF merge_sort ITSELF!!!
+  if (len(lst) == 0):
+    return
+  else:
+    merge_sort_helper(lst, 0, lst(len) - 1)
+
+
+
+--------------^--code--^----------------
+
+
+Runtime of merge:
+  - can say for sure, all the while loops are in total a linear time of high_right - low_left, because they are all going to eventually append the items
+
+Runtime of merge_sort_helper:
+  - expecting n*logn time (NOTE: for all searching algorithms, there is no better searching time than nlogn)
+  - ((FIGURE 2))
+
+Runtime merge_sort:
+  - Time cost -- T(n): theta(nlogn)
+  - Space cost -- S(n): theta(nlogn) --> see below for breakdown
+    - the space taken up by the input is not counted in the space used for the algorithm
+    - the space used up for the algorithm is called the "additional space"
+
+    - lst, low, and high, etc dont count (input)
+    - making the new merged_list objects
+      - worst case:
+        - theta(n)
+        - when you're combining the two biggest merged_list's, which are the two halves being combined right before you get the whole
+    - the space the runtime stack takes (see all stack runtime diagrams, ladder looking things)
+      - ((FIGURE 3)) --> theta(logn)
+        - worst case runtime:
+          - the height because the maximum nested stacks you'll have at any one time will be when it
+            reaches 1 down one "path", which would be the height
+        -   every time you reach the end, the last one will pop off when you're done with it
+      - the nesting of calls are stacking up in the stack
+      - might not be a constant space, the depth of the nesting can be inconsistent
+
+
+Selection Sort:
+  - T(n) = theta(n^2)
+  - S(n) = theta(1) --> constant, only making new vars for curr, etc.
+
+
+Insertion Sort:
+  - T(n) = theta(n^2)
+  - S(n) = theta(1) --> constant, only making new vars for curr, etc.
+
+
+--> may signify that while Merge Sort has the best runTIME, it doesn't beat the constant space of selection sort/insertion sort

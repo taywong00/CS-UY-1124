@@ -1,0 +1,128 @@
+Version 2: 1, 2, 3 .... , num/2, ..... , num
+
+  - let k be a divisor of num in the second half of the range. that is k > num/2
+  - let d be k's complementary divisor, therefore d = num/k
+  we have: d = num/k < num/(num/2) = num/1 * 2/num = 2
+  therefore d < 2. since d is a divisor, we get that d = 1.
+  so num/k = 1, therefore k = num.
+  this shows that the only divisor in the second half of the range is num itself
+
+  ((FIGURE 1))
+
+Version 3: 1, 2, 3, ..., sqrt(num), ..., num
+  - ex: 1, 2, 3, 4, 5, 10, 20, 25, 50, 100
+    - 10 is the sqrt
+    - all the divisors in the second half (after 10) have a complementary divisor in the
+      first half (before 10), so therefore we should find a divisor in the first half
+      - therefore it is ok to only check the first half
+
+    - solve using proof by contradiction
+
+    ((FIGURE 2))
+
+    - let k and d be comp divisors of num, and assume that they are both greater than sqrt(num)
+    - therefore we have: num = k * d > sqrt(num) * sqrt(num) = num
+    - this implies that num > num, which is false -- a contradiction
+    - this shows that at least one in each pair of complementary divisors... (((rest is online??)))
+
+
+Runtime analysis
+  T1 --> time for is_prime ((09/12/18 FIGURE 7))
+  T2 --> time for ((FIGURE 1))
+  T3 --> time for ((FIGURE 2))
+
+  T1 > T2 > T3
+
+  - the running time depends on the size of the input
+    - we parameterize the running time by the size of the input
+      - T1(n)
+      - T2(n)
+      - T3(n)
+  - the running time depends on the operators we use, and one the types of data they are applied on
+    - our analysis uses an abstract model, that ignores machine dependent constants
+    - we count each primitive operation as 1
+      - primitive: basic operations (add, subtract, multiply, divide, etc)
+      - NOT primitive: raising to a power, sorting, etc
+  - the running time depends on the machine's hardware technology
+    - to cancel the affect of the machine, and to classify algorithms to classes based on their "quality",
+      we make asymptotic analysis (look at the order of growth T(n))
+      this groups algorithms in classes, based on their "quality"
+
+  runtime informal criteria
+    - we find the ASYMPTOTIC ORDER of the number of primitive operations,
+      executed by the process, as a function of the input size
+
+        T(n) = 3n^2 + 6n - 15 = THETA(n^2)
+
+        - Rule of Thumb to get the order of growth:
+          - drop low-order terms
+          - ignore leading constants
+
+
+  - in this case:
+      input size: n = num --> they are relatively the same here, but with bigger data it will be different
+
+  T1(n) = 1 + 1 + 5 (... + 5 + ...) + 2 = 5n + 4 = THETA(n)
+                          n
+
+    - count_divs = 0 --> 1
+    - iter --> 1
+    - each iteration --> 5
+      - next, range, num + 1, mod, count_divs +=1
+    - true/false --> 2
+
+  T2(n) = 1 + 1 + 5 (...) + 2 = 2.5n + 4 = THETA(n)
+                     n/2
+
+    - count_divs = 0 --> 1
+    - iter --> 1
+    - each iteration --> 5
+      - next, range, num/2 + 1, mod, count_divs +=1
+    - true/false --> 2
+
+  T3(n) = 1 + 1 + 5 (...) + 2 = 5 * sqrt(n) + 4 = THETA( sqrt(n) )
+                    sqrt(n)
+
+    - count_divs = 0 --> 1
+    - iter --> 1
+    - each iteration --> 5
+      - next, range, math.sqrt(num) + 1, mod, count_divs +=1
+    - true/false --> 2
+
+
+- T1 and T2 have the same asymptotic order (order of growth),
+  so we get that they are basically the same in runtime
+  - if T1 runs on a faster computer will compensate and can let T1 run faster than T2, difference isnt that bigger
+
+  -> but for T3, it is so much faster that no matter how fast the machine is that T2 is run,
+    it will never beat T3
+
+
+  REVISED ORDER AFTER CALCULATING ASYMPTOTIC ORDER:
+
+    ( T1 = T2 ) > T3
+
+
+  More formal definitions....
+
+    Big O Definition
+
+      Def: let f(n) and g(n) be two functions mapping positive integers
+            to positive real numbers
+
+      we say that f(n) = O(g(n)) if there exists positive real constant C
+      and a positive integer constant n0((FIGURE 3)) such that
+      f(n) <= c*g(n) for all n >= n0
+
+        Notes:
+          1. when we say f(n) = 0(g(n)) we mean to say that g is an
+          upper bound of f (informally, " f <= g ")
+              --> f is ALWAYS less than or equal to g
+
+              ((FIGURE 4)) --> we're making less strict because it
+                                can be less than a MULTIPLE of g,
+                                and can only be at a certain point
+                                does it have to be less (not the whole
+                                function necessarily)
+
+              ex: ((FIGURE 5))

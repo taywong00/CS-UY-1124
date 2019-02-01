@@ -1,0 +1,81 @@
+cont....
+
+((FIGURE 1)) --> see Big O Definition
+
+
+Omega Definition --> Ω
+  let f(n) and g(n) be two functions mapping positive integers
+      to positive real numbers
+
+  we say that f(n) = Ω(g(n)) if there exist positive real
+  constant c and a positive intefer constant n0 such that
+  f(n) >= c*g(n) for all n >= n0
+
+  ((FIGURE 2))
+
+  ((FIGURE 3))
+
+
+Theta Definition --> θ
+  let f(n) and g(n) be two functions mapping positive integers
+    to positive real numbers
+
+    we say that f(n) = θ(g(n)) if there exist positive real
+    constants c1, c2 and a positive intefer constant n0 such that
+    c2*g(n) <= f(n) <= c1*g(n) for all n >= n0
+
+    ((FIGURE 4))
+
+    ((FIGURE 5))
+
+    Example: ((FIGURE 6))
+
+Notes (cont.):
+  2. when we say f(n) Ω(g(n)) we mean to say that g is a lower bound of f ( informally " f >= g")
+  3. when we say that f(n) = θ(g(n)) we mean to say that g is a tight bound fo f (informally "f = g")
+
+
+Examples of determining tight/upper/lower bounds: ((FIGURE 7))
+
+Function example: ((FIGURE 8))
+
+  Important Sums:
+    1) 1 + 2 + 3 + 4 + ... + n = n(n+1) / 2 = θ(n^2)
+
+Example: ((FIGURE 9))
+
+  def prefix_average(lst):
+    n = len(lst)
+    res = [0] * n
+    for i in range(n):
+      curr_sum = sum( lst[0 : i + 1] )
+                      #adds up all the values of a SLICED iterable list as long as their numerical
+                      # also note: sum is not primitive
+                      # SLICED: take index 0 TO 1, then index 0 TO 2, then index 0 TO 3, etc.
+
+      curr_avg = curr_sum / (i+1)
+      res[i] = curr_avg # instead of making a list and appending a new object each time, make a empty (of 0 filled) list and just modify the values at each index as you go
+
+    return res
+
+
+    #NOTE!!!!
+      #if someone were to give this answer ^^ and not the one below vv, they would get 50% only --> we want the most efficient solution
+
+    #======================
+
+
+    def prefix_average2(lst):
+      n = len(lst)
+      res = [0] * n
+      curr_sum = 0
+      for i in range(n):
+        curr_sum += lst[i]
+                        #adds up all the values of a SLICED iterable list as long as their numerical
+                        # also note: sum is not primitive
+                        # SLICED: take index 0 TO 1, then index 0 TO 2, then index 0 TO 3, etc.
+
+        curr_avg = curr_sum / (i+1)
+        res[i] = curr_avg # instead of making a list and appending a new object each time, make a empty (of 0 filled) list and just modify the values at each index as you go
+
+      return res

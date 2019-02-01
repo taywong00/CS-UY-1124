@@ -1,0 +1,40 @@
+
+--------------v--code--v----------------
+
+# assume Array_Stack class is stored in a file called Array_Stack
+# import file.module() (assume same directory)
+
+import Array_Stack.Array_Stack()
+
+def eval_postfix_exp(exp_str):
+  # given string
+  # return int val
+
+  args_stack = Array_Stack()
+  exp_tokens = exp_str.split()
+  operators = '+-*/'
+
+  for token in exp_tokens:
+    if (token not in operators): # token is a number, we can consider the "not in" operator to be 4 --> short and bounded but the 4 characters we gave it
+      args_stack.push(int(token))
+    else: # is operator
+      arg2 = args_stack.pop()
+      arg1 = args_stack.pop()
+
+      if (token == '+'):
+        res = arg1 + arg2
+      elif (token == '-'):
+        res = arg1 - arg2
+      elif (token == '*'):
+        res = arg1 * arg2
+      else: # token == '/'
+        if (arg2 == 0):
+          raise ZeroDivisionError
+        res = arg1 / arg2
+
+  return args_stack.pop()
+
+
+val = eval_postfix_exp('2 3 4 + 3 * 4 6 - + *')
+print(val)
+--------------^--code--^----------------

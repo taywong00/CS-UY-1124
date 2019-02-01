@@ -1,0 +1,79 @@
+((FIGURE 1)) (cont. from last class)
+
+((FIGURE 2))
+A list object uses a container of an array kind, that
+  1) elements are stored contiguously in the memory
+  2) all datas stored in the container are of the same size
+    --> how does this work if we can have different types of diff sizes?
+        (long string, small number, tuple, etc.)
+        - we are not storing the actual data, the "datas" in the container
+          are pointers (or the address in the memory where the actual data is)
+        - but regardless of what the actual data size is, the "size" of the
+          addresses must all be the same
+        - SEE: how all the memory images we draw are pointing to data,
+              the data is not in the list/container itself
+
+  --> allows random access
+      address of lst[i] = base of address of the array
+                                      +
+                          i*(size of each element)
+
+      --> this is the underlying data structure for lists which
+          allow them to pull len(lst) at constant time
+
+Append
+  why can't you ~actually~ "append"/add an item directly to the end of a list?
+    - we cant assume that that memory in that space is free for us to use,
+      it could be being used/taken by other applications/important uses
+    - who is responsible for deciding who gets which spaces in the memory,
+      passing controls to applications
+      - the operating system --> acts like a police officer
+        - has an internal table like ((FIGURE 3))
+
+((FIGURE 4)) -- increasing array 1 at a time
+  --> every time you create a new array/containter, python will use it's garbage
+      collector to discard the old one
+
+    runtime
+      worst case: θ(n)
+      n * append: θ(n^2)
+        triangle shape ((FIGURE 5))
+
+    s(n) = θ(n)
+
+    amortized cost of append = θ(n^2 / n) = θ(n)
+
+((FIGURE 6)) -- doubling array each time you run out of space
+    runtime
+      worst case: θ(n)
+      n * append:
+
+    n= < s(n) <= 2n --> s(n) = θ(n)
+
+    amortized cost of append = θ(n / n) = θ(1)
+
+
+important Sums
+  1) 1 + 2 + 3 + 4 + ... + n = (n*(n+1))/2 = θ(n)
+  2) 1 + 2 + 4 + 8 + ... + 2^n = 2^(n+1) - 1 = θ(2^n)
+     1 + 2 + 4 + 8 + ... + n = 2n -1 = θ(n)
+
+
+amortized cost of an operation (average cost of the operation)
+                =
+( total cost of running a sequence of size n (using this operation) ) / 2
+
+
+((FIGURE 7))
+
+#----example code------
+import ctypes # provides low-level arrays
+def make_array(n):
+  return(n * ctypes.py_object)()
+
+>>> arr = make_array(8)
+>>> arr[0] = 5
+>>> arr[0]
+    --> 5
+>>> arr.append(7)
+    --> attribute error, cant append because its a lower level structure/container

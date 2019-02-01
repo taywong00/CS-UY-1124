@@ -1,0 +1,62 @@
+Recursion
+
+What is recursion?
+  In computer science:
+    A problem solving technique, closely related to mathematical induction
+
+      (induction: a proving technique to make an argument that something
+      is true, proving a universal truth --> proof under certain assumptions,
+      but based on this we can prove that is is true for other things)
+
+    where we define the solution as a combination of solutions to
+    smaller instances of the same problem
+
+
+Developing a recursive algorithm
+
+  Step 1: the base case
+    - solve the problem for the smallest possible input
+
+  Step 2: the recursive step
+    - define the recursion hypothesis
+      --> Assume that "when calling the function on a smaller input,
+          it does its job"
+    - based on this assumption, find how to combine calls to smaller
+      instances in order to solve the problem for the given input
+
+
+((FIGURE 1))
+  - for execution
+    - we see that it works when n = 1, prints 1 (base case)
+    - then when we do n = 2, we call when n = 1,
+      and we know that so print 2 --> produces 1 2
+    - when n = 3, we call n = 2, know produces {1 2},
+      then print 3 --> produces 1 2 3
+    - when n = 4, we call n = 3, know produces {1 2 3},
+      then print 4 --> produces 1 2 3 4
+
+((FIGURE 2)) -- the memory image
+
+  Note: we dont really get into execution that much/how the
+        computer actually processes this, we usually stay in
+        the logical theoretical level knowing that it works the
+        way it should
+
+        --> we dont develop the algorithm based on the way the
+            computer executes it and tracing how it works in the memory
+            (like we have in the past)
+
+        --> instead, the way we come up with recursive algorithms is by
+            the steps above --> logical assumptions and proofs
+
+
+((FIGURE 3)) --> doing it by printing first half then second half
+                (includes line graph, code and execution trace)
+
+
+((FIGURE 4)) --> example: count_down
+
+((FIGURE 5)) --> example: count_up_and_down
+  - assumption: "when calling count_up_and_down on a smaller
+                range it would print the numbers of that range
+                in an ascending followed by descending order"

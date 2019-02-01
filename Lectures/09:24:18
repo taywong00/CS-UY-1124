@@ -1,0 +1,87 @@
+the searching problems
+
+Linear Search
+  problem
+    implement the following cuntionL
+      def linear_search(lst, val)
+
+
+      the function should return an index in lst where val appears
+      first or none if it is not in the lst
+
+      def linear_search(lst, val):
+        for i in range(len(lst)): --> θ(# of iterations)
+          if (lst[i] == val): --> θ(1)
+            return i
+        return None --> θ(1)
+
+        --> runtime: let n be the size of lst
+                      T(n) = ? --> we cant define a static value for any value of n
+                                  because it depends on what the input is/its size
+                    Instead...
+                      Best case T(n) = ? -->  θ(1) (if the least number of iterations was 1)
+                      Average T(n) = ?
+  When looking for runtime, by default:
+                      Worst case T(n) = ? -->  θ(n) (if the least number of iterations was n)
+
+
+
+Sorted search problems
+  problem
+    implement the function
+      def sorted_search(srt_lst, val)
+
+    the function is given a sorted list, srt_lst, and a val to search for it should
+    return an index where val appears, pr none if val isn not one of srt_lst's
+    elements
+
+    linearly: going though each value, and if the value is less than the one
+              you're looking for--> keep going
+              --> runtime: (worst case) T(n): θ(n) (going through the whole list)
+
+    binary: starting at the middle --> if greater go right, if less go left;
+            then set the "check" value at the middle of the new range
+
+
+        ((FIGURE 1))
+
+      Iteration Number        Size of searching range
+
+            1                         n       = n/(2^0)
+            2                         n/2     = n/(2^1)
+            3                         n/4     = n/(2^2)
+            4                         n/8     = n/(2^3)
+            ...                       ...
+            k                         n/(2^(k-1))
+            ...                       ...
+((FIGURE 2))log(base2)n               1
+
+
+    Was this worth it (in terms of runtime)?
+      - yes, ((FIGURE 3))
+
+      NOTE ON LOGS: base doesnt matter (by default its base2)
+                    remember rule ((FIGURE 4))
+
+
+
+Linear vs. Logarithmic
+
+num linear ops    num log operations
+  n               log(base2)n
+
+  2               1
+  ...             ...
+  4               2
+  ...             ...
+  2^3 = 8         3
+  ...             ...
+  2^10 ~1000      10
+  ...             ...
+  2^32 ~4billion  32
+  ...             ...
+  2^1000          1000
+  ...             ...
+
+
+  ((FIGURE 5))

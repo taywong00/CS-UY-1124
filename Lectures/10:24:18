@@ -1,0 +1,111 @@
+******* Queues *******
+
+The Queue ADT
+
+  Data model
+    - a collection of items that come out in a FIFO (First In First Out) order
+
+  Operations
+    - q = Queue() --> creates an empty queue
+    - len(q) --> returns the number of items in q
+    - q.is_empty() --> returns True if q is empty, or False otherwise
+
+    - q.enqueue(item) --> inserts item into q
+    - q.dequeue() --> removes and returns the item that entered q first
+                      (out of all the items currently in q)
+                      or raises an Exception if q is empty
+
+    - q.first() --> returns the item that entered q first
+                    (out of all the items currently in q),
+                    or raises an Exception if q if empty
+
+    ((FIGURE 1))
+
+
+
+    --------------v--code--v----------------
+
+    class ArrayQueue:
+
+    INITIAL_CAPACITY = 8 # just made up 8, start with an initial size but considered "empty"
+
+      def __init__(self):
+        self.data = [None] * ArrayQueue.INITIAL_CAPACITY
+        self.num_of_elems = 0
+        self.front_ind = None # doesnt matter right now because we're not really following a valid append pattern where the front will always be 0
+
+
+      def __len__(self):
+        return self.num_of_elems
+
+      def is_empty(self):
+        return (len(self) == 0)
+
+
+
+      def enqueue(self, item):
+
+        # we dont have enough space to enqueue --> worst case runtime is linear runtime
+        if (self.num_of_elems == len(self.data)): # array is full
+          self.resize(2 * len(self.data))
+
+        # we have enough space --> amortized runtime is constant
+        if (self.is_empty()):
+          self.data[0] = item # could be 3
+          self.front_ind = 0 # then this would also be 3, but doesnt matter
+          self.num_of_elems = 1
+
+        else: # not taking into consideration resizing
+          back_ind = (self.front_ind + self.num_of_elems) % len(self.data) # current capacity, not initial capacity
+          self.data[back_ind] = item
+          self.num_of_elems += 1
+
+
+
+      def dequeue(self):
+
+        if (self.is_empty()):
+          raise Exception('The Queue is empty')
+
+        else:
+          val = self.data[self.front_ind]
+
+          # python specific action: allows the garbage collector to do its work
+          # knows that something is in use if there are other things pointing to it, it can be disposed so you can free the space up
+          # if we dont do this, we are misleading the garbage collector
+          # there can be other things pointed to this value, but we dont want to keep pointing here when we dont need to
+
+          self.data[self.front_ind] = None
+
+          self.front_ind = (self.front_ind + 1) % len(self.data)
+          self.num_of_elems -= 1
+
+          if (self.is_empty()): # should invalidate the pointer because theres nothing to point to
+            self.front_ind = None
+
+
+        # we have too much space, need to resize (downsize)
+        if (self.num_of_elems < len(self.data) // 4):
+          resize(len(self.data) // 2)
+
+        return val
+
+
+
+      def first(self):
+        if (self.is_empty()):
+          raise Exception('The Queue is empty')
+        else:
+          return self.data[self.front_ind]
+
+
+      def resize(self, new_cap):
+        old_ind = self.front_ind
+        old_data = self.data
+        self.data = [None] * new_cap
+
+        for new_ind in range(self.num_of_elems):
+          self.data[new_ind] = old_data[old_ind]
+          old_ind = (old_ind + 1) % len(old_data)
+
+        self.front_ind = 0

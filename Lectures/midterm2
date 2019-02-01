@@ -1,0 +1,30 @@
+stacks
+queues
+linkedlists
+polish notations-- infix, postfix, prefix
+binary tree traversal-- preorder, inorder, postorder (note: if you mess up any of the numbers in the tracing, you'll get the whole thing wrong)
+abstract data types
+  - mix/max stack
+  - dupstack
+  - midstack
+  - leakystack
+  - stack with 1 queue
+  - queue with 2 stacksf
+
+
+
+3) make sure it works for all edge cases (first, last, center)
+def insert_sorted(srt_lnk_lst, elem):
+  curr = srt_lnk_lst.header.next # first node
+  new_node = DoublyLinkedList.Node(elem)
+  while(curr is not srt_lnk_lst.trailer and elem > curr_node.data): # note "is not" INSTEAD OF "!="
+    curr = curr.next
+
+  new_node.next = curr
+  new_node.prev = curr.prev
+  curr.prev.next = new_node
+  curr.prev = new_node
+
+
+def insert_sorted(queue, elem):
+  for i in range(len(queue))

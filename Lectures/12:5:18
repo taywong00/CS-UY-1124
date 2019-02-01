@@ -1,0 +1,133 @@
+
+Time Analysis of Find
+  - worst case:
+    all keys are mapped to the same slot, it takes θ(n) to
+    scan that chain
+
+  - expected (average) time:
+    - we assume that our hash function satisfies the
+      "uniform hashing" property
+    - let α (alpha) be the load factor of the table
+      that is: α = n / N
+      --> α = expected length of each chain (by average)
+      |
+      --> expected tune for  Find = θ(1 + α)
+          calculate the hash function ^   ^scan the chain
+          and Access slot
+
+    - if we always maintain n <= N, then α <= 1
+      --> therefore, the exected time for Find = θ(1)
+
+
+
+Implementation points
+
+- collision resolution: chaining implemented as UnsortedArrayMap
+- hash function:
+    h(k) = h2(h1(k)), where h1 is coding and h2 is compression
+    h(k) = [(a*hash(k) + b) mod p] mod N
+    - using built-in hash() function for coding and MAD method
+      for compressing
+- performance: always keep n <= N
+
+
+******* DEFINING HASH TABLE CLASS **********
+
+import UnsortedArrayMap
+
+class ChainingHashTableMap:
+
+  def __init__(self, N=2, p=40206835204840513073): # phone picture 1
+    self.N = N # capacity
+    self.n = 0 # table is empty, n is size/num items
+    self.table = [UnsortedArrayMap.UnsortedArrayMap() for i in range(self.N)]
+
+    self.p = p # bigger than |U|
+    self.a = random.randrange(1, self.p - 1) # randrange inclusive of both ends
+    self.b = random.randrange(0, self.p - 1)
+
+  def __len__(self):
+    return self.n
+
+  def is_empty(self):
+    return (len(self) == 0)
+
+  def hash_function(self, key): # doing compression on the og hash/coding function
+    return ((self.a * hash(key) + self.b) mod self.p) mod self.N
+
+  def __getitem__(self, key): # find method
+    i = self.hash_function(key)
+    curr_bucket = self.table[i]
+    return curr_bucket[key]
+
+
+  def __setitem__(self, key, value):
+    i = self.hash_function(key)
+    curr_bucket = self.table[i]
+
+    old_size = len(curr_bucket)
+    curr_bucket[key] = value # set item of the UnsortedArrayMap takes care of checking if exists (exists, then replace--> else: make new entry)
+    new_size = len(curr_bucket)
+
+    # update size only if you make a new entry, dont if you only made an update
+    if (old_size < new_size):
+      self.n += 1
+
+    # in order to keep constant time, we need to resize (so n <= N)
+    if (self.n > self.N):
+      rehash(self.N*2) # resize function
+
+
+  def __delitem__(self, key):
+    i = self.hash_function(key)
+    curr_bucket = self.table[i]
+    del curr_bucket[key] # handled by UnsortedArrayMap
+    self.n -= 1 # dont have to check it like setitem because it has to remove one to continue, otherwise it would break the function and raise an error (according to the UnsortedArrayMap del method)
+
+    # resize
+    if (self.n < self.n // 4):
+      self.rehash(self.N // 2)
+
+
+  def __iter__(self):
+    for curr_bucket in self.table:
+      for key in curr_bucket:
+        yield key
+
+
+  def rehash(self, new_size):
+    old = [(key, self[key]) for key in self] # self[key] is invoking the getitem method
+    self.__init__(new_size)
+    for (key, value) in old:
+      self[key] = value
+
+
+
+--------v--testing--v-----------
+ht = ChainingHashTableMap()
+for i in range(100):
+  ht[i*i] = i
+
+for i in range(len(ht.N)):
+  print(i, ": ", sep='', end='')
+  curr_bucket = ht.table[i]
+  for key in curr_bucket:
+    print('(', key, ', ', curr_bucket[key], ')', sep='', end='')
+
+for i in range(50):
+  del ht[i*i]
+
+for i in range(len(ht.N)):
+  print(i, ": ", sep='', end='')
+  curr_bucket = ht.table[i]
+  for key in curr_bucket:
+    print('(', key, ', ', curr_bucket[key], ')', sep='', end='')
+
+--------^--testing--^-----------
+
+
+also note:
+
+python dictionaries use hash tables
+--> so it runs in constant average time (like hash tables)
+--> not NOT CONSTANT WORST CASE

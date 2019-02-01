@@ -1,0 +1,54 @@
+# implemented the __delitem__ method
+
+
+Proposition:
+
+  let T be a binary tree. we have:
+
+    T is a binary search tree,
+    then we can guarantee that the inorder of T is sorted
+
+    additionally:
+
+    if the inorder is sorted,
+    then we can guaratee that T is a binary search tree (it can only come from a binary search tree)
+
+
+
+Data Structures for Map ADT
+
+  UnsortedArrayMap
+    - Find: θ(n)
+    - Insert: θ(n) -- starts with a find, if found change the value, else just add it to the end
+    - Delete: θ(n) -- also starts with a find, once you find it delete it, and then shift the values over
+
+  UnsortedLinkedListMap
+    - Find: θ(n) -- have to iterate just like UnsortedArrayMap
+    - Insert: θ(n)
+    - Delete: θ(n)
+
+  SortedArrayMap
+    - Find: θ(log(n)) -- binary search
+    - Insert: θ(n) -- find first θ(log(n)), but if you want to add a new entry then you have to shift everything over-- θ(n)
+    - Delete: θ(n) -- same as insert
+
+  SortedLinkedListMap
+    - Find: θ(n) -- we dont have random access (just because we have the first node, we cant look through the whole LinkedList at once)
+    - Insert: θ(n) -- start with find, adding (changing pointers) is constant
+    - Delete: θ(n) -- start with find, deleting (changing pointers) is constant
+
+
+
+
+  BinarySearchTreeMap
+    - Find: θ(n) (or θ(h), where h is height) -- it goes down one path
+    - Insert: θ(n) (or θ(h))
+    - Delete: θ(n) (or θ(h), might be 2n/2h because we might have to do this twice, but write cost as n/h)
+
+    this is disappointing...
+      - but there are other implementations that are more efficient
+
+  AVLTreeMap # look these up online!
+    - Find: θ(log(n))
+    - Insert: θ(log(n))
+    - Find: θ(log(n))

@@ -1,0 +1,222 @@
+Traversal sequences
+
+  L - left
+  R - right
+  D - data
+
+  1. Pre-order (DLR)
+  2. In-order (LDR)
+  3. Post-order (LRD)
+  4. Breadth first
+      - level by level traversal
+        - ex: ((FIGURE 1)) -- 5, 2, 7, 3, 6, 1
+
+
+  -------------v code v------------
+  def seq1():
+    yield 1
+    yield 2
+
+  def seq2():
+    yield 3
+    yield 4
+  -------------^ code ^------------
+
+  >>> for item in seq1():
+        print(item)
+
+  1
+  2
+
+  >>> for item in seq1():
+              print(item)
+
+  3
+  4
+
+  -------------v code v------------
+  def seq1():
+    yield 1
+    yield 2
+    for item in seq2():
+      yield item
+
+  def seq2():
+    yield 3
+    yield 4
+  -------------^ code ^------------
+
+  >>> for item in seq1():
+        print(item)
+  1
+  2
+  3
+  4
+
+  -------------v code v------------
+  def seq1():
+    yield 1
+    yield 2
+    yield from seq2() # does the same as the for loop
+
+  def seq2():
+    yield 3
+    yield 4
+  -------------^ code ^------------
+
+  >>> for item in seq1():
+        print(item)
+  1
+  2
+  3
+  4
+
+
+******* BACK TO TREES *********
+
+
+-------------v code v------------
+
+def preorder(self):
+  yield from self.subtree_preorder(self.root)
+
+def subtree_preorder(self, root):
+  if (root is None):
+    return
+
+  else:
+    yield root # not root.data, it gives more future access to the user to use the generator for other purposes (like actually modifying the data values in the node being yielded)
+    yield from self.subtree_preorder(root.left)
+    yield from self.subtree_preorder(root.right)
+
+
+-------------^ code ^------------
+
+
+-------------v code v------------
+
+def __iter__(self):
+  for node in sef.preorder():
+    yield node.data
+-------------^ code ^------------
+
+
+-------------v test code v------------
+
+for item in tree1.preorder():
+  print(item)
+
+5
+4
+2
+1
+6
+
+-------------^ test code ^------------
+
+-------------v code v------------
+
+def inorder(self):
+  yield from self.subtree_preorder(self.root)
+
+def subtree_inorder(self, root):
+  if (root is None):
+    return
+
+  else:
+    yield from self.subtree_preorder(root.left)
+    yield root
+    yield from self.subtree_preorder(root.right)
+
+
+def postorder(self):
+  yield from self.subtree_preorder(self.root)
+
+def subtree_postorder(self, root):
+  if (root is None):
+    return
+
+  else:
+    yield from self.subtree_preorder(root.left)
+    yield from self.subtree_preorder(root.right)
+    yield root
+
+-------------^ code ^------------
+
+
+-------------v code v------------
+
+def breadth_first(self):
+
+  if (self.is_empty()):
+    return
+
+  nodes_q = ArrayQueue.ArrayQueue() # name implied were not having a queue of the actual data, but rather references to the nodes (can still get data from there)
+  nodes_q.enqueue(self.root)
+
+  while(nodes_q.is_empty() == False): # starting with elem of 1 --> root
+    curr_node = nodes_q.dequeue()
+    yield curr_node
+    if (nodes_q.left is not None):
+      nodes_q.enqueue(curr_node.left)
+    if (nodes_q.right is not None):
+      node_qs.enqueue(curr_node.left)
+
+
+-------------^ code ^------------
+
+
+-------------v code v------------
+#MODIFIED ITER FUNCTION
+
+def __iter__(self):
+  for node in breadth_order():
+    yield node.data
+-------------^ code ^------------
+
+-------------v test code / code v------------
+
+
+import LinkedBinaryTree
+
+
+l_ch1 = LinkedBinaryTree.LinkedBinaryTree.Node(1)
+r_ch1 = LinkedBinaryTree.LinkedBinaryTree.Node(6)
+
+r_ch2 = LinkedBinaryTree.LinkedBinaryTree.Node('+', l_ch1, r_ch1)
+l_ch2 = LinkedBinaryTree.LinkedBinaryTree.Node(4)
+
+subtree_root = LinkedBinaryTree.LinkedBinaryTree.Node('*', l_ch2, r_ch2)
+
+exp_tree = LinkedBinaryTree.LinkedBinaryTree(subtree_root)
+
+def eval(exp_tree):
+  pass
+
+def subtree_eval(root):
+  if (root.left is None and root.right is None):
+    return root.data
+  else:
+    arg1 = subtree_eval(root.left)
+    arg2 = subtree_eval(root.right)
+    if (root.data == '+'):
+      return arg1 + arg2
+    elif (root.data == '-'):
+      return arg1 - arg2
+    elif (root.data == '*'):
+      return arg1 * arg2
+
+    elif (root.data == '/'):
+      if (arg2 == 0):
+        raise ZeroDivisionError()
+      return arg1 / arg2
+    else: # dont support this operation
+      raise Exception('Unsupported operation ' + str(root.data))
+
+-------------^ test code / code ^------------
+
+Note:
+- we only need to support the leaf (no children) and the two child cases (not only left/only right)
+- this is a binary operating algo, so we will only ever have a tree with two or no children
+- otherwise if we were trying to solve a different problem that didnt have these limitations,
+  we should consider these cases

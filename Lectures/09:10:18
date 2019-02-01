@@ -1,0 +1,168 @@
+extend ((FIGURE 1))
+    >>> lst1 = [1, 2, 3]
+    >>> lst2 = lst1
+    >>>
+    >>> lst3 = [1, 2, 3]
+    >>> id(lst1)
+    4405196744
+    >>> id(lst3)
+    4405251272
+    >>> id(lst2)
+    4405196744
+    >>>
+    >>> lst1.append(4)
+    >>> lst1
+    [1, 2, 3, 4]
+    >>> lst2
+    [1, 2, 3, 4]
+    >>>
+    >>> id(lst1)
+    4405196744
+    >>> lst1 = lst1 + [5, 6]
+    >>> id(lst1)
+    4405251464
+    >>> lst4 = [1, 2, 3]
+    >>> lst4.append([5, 6])
+    >>> lst4
+    [1, 2, 3, [5, 6]]
+    >>> lst3.extend([5, 6])
+    >>> lst3
+    [1, 2, 3, 5, 6]
+    >>> id(lst3)
+    4405251272
+    >>>
+
+
++= operaror ((FIGURE 2))
+    >>> lst1 = [1, 2, 3]
+    >>> id(lst1)
+    4405251336
+    >>>
+    >>> lst1 += [5, 6]
+    >>> lst1
+    [1, 2, 3, 5, 6]
+    >>> id(lst1)
+    4405251336
+    >>>
+
+
+list comprehension ((FIGURE 3))
+
+  basic syntax
+    [f(var) for var in iterableCollection]
+  extended form
+    [f(var) for var in iterableCollection]
+
+    example: ((FIGURE 4))
+      class Counter:
+        def __init__(self):
+          self.value = 0
+        def inc(self):
+          self.value += 1
+
+        def __repr__(self):
+        #print a representation of x
+        #we want to print the value of the objects
+        return str(self.value)
+
+      c1 = Counter()
+      c2 = Counter()
+
+      c1.inc()
+      c2.inc()
+
+      vv_______when run__(before __repr__)_____vv
+      >>>c1.value
+        --> 2
+      >>>c2.value
+        --> 0
+
+      >>>c1
+        --> __main__.Counter object at 0x10c1ee8d0
+      >>>c2
+        --> __main__.Counter object at **other characters representing memory**
+
+      ____after __repr__________
+      >>>c1
+        --> 2
+      >>>c2
+        --> 0
+
+
+    ((FIGURE 5))
+
+
+    iterable collection
+      object that produces an iterator via the syntax iter(obj)
+
+          ex:
+          >>> lst= [1, 2, 3]
+          >>> s = 'abc'
+          >>> r = range(3)
+          >>>
+          >>> lst_iter = iter(lst)
+          >>>
+          >>> lst_iter
+          <list_iterator object at 0x106923ba8>
+          >>>
+          >>> s_iter = iter(s)
+          >>> s_iter
+          <str_iterator object at 0x106923c88>
+          >>>
+          >>> r_iter = iter(r)
+          >>> r_iter
+          <range_iterator object at 0x1064f4420>
+          >>>
+
+      iterator: object that manages iteration though a series by making subsequent calls to the next(iterator)
+
+          >>> next(lst_iter)
+          1
+          >>> next(lst_iter)
+          2
+          >>> next(s_iter)
+          'a'
+          >>> next(s_iter)
+          'b'
+          >>> next(s_iter)
+          'c'
+          >>> next(r_iter)
+          0
+          >>> next(r_iter)
+          1
+          >>> next(r_iter)
+          2
+          >>> next(lst_iter)
+          3
+          >>> next(lst_iter)
+          Traceback (most recent call last):
+            File "<stdin>", line 1, in <module>
+          StopIteration
+          >>> next(s_iter)
+          Traceback (most recent call last):
+            File "<stdin>", line 1, in <module>
+          StopIteration
+          >>> next(r_iter)
+          Traceback (most recent call last):
+            File "<stdin>", line 1, in <module>
+          StopIteration
+          >>>
+
+
+          >>> lst_iter1 = iter(lst)
+          >>> lst_iter2 = iter(lst)
+          >>> next(lst_iter1)
+          1
+          >>> next(lst_iter1)
+          2
+          >>> next(lst_iter2)
+          1
+          >>> next(lst_iter2)
+          2
+          >>> next(lst_iter2)
+          3
+          >>> next(lst_iter2)
+          Traceback (most recent call last):
+            File "<stdin>", line 1, in <module>
+          StopIteration
+          >>>

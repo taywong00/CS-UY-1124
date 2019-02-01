@@ -1,0 +1,110 @@
+import random
+
+class ArrayMinHeap:
+
+  class Item:
+
+    def __init__(self, priority, value):
+      self.priority = priority
+      self.value = value
+
+    def __lt__(self, other):
+      return self.priority < other.priority
+
+
+  def __init__(self):
+    self.data = [None] # taking the place of that first entry, index 0 (we want to ignore it)
+
+  def __len__(self):
+    return len(self.data) - 1
+
+  def is_empty(self):
+    return (len(self) == 0)
+
+  def left(self, ind):
+    return 2*ind
+
+  def right(self, ind):
+    return 2*ind + 1
+
+  def parent(self, ind):
+    return ind // 2s
+
+
+  def has_left(self, ind):
+    return (self.left(ind) <= len(self.data) - 1)
+  def has_right(self, ind):
+    return (self.right(ind) <= len(self.data) - 1)
+
+  def min(self):
+    if (self.is_empty()):
+      raise Exception('Priority queue is empty')
+    return self.data[1]
+
+  def insert(self, priority, value):
+    # insert the new item to the end of the array
+    new_item = ArrayMinHeap.Item(priority, value)
+    self.data.append(new_item)
+
+    # fix it so its in the right position
+    self.fix_up(len(self.data) - 1)
+
+
+  def delete_min(self):
+    if (self.is_empty()):
+      raise Exception('Priority queue is empty')
+
+    item = self.min()
+    self.swap(1, len(self.data) - 1)
+    self.data.pop()
+
+    if (not self.is_empty()): # just in case you started with len of 1, popped so now you have empty list
+      self.fix_down(1)
+
+    return item
+
+  def swap(self, i1, i2):
+    self.data[i1], self.data[i2] = self.data[i2], self.data[i1]
+
+  def fix_up(self, ind): # can do this iteratively (and better because recursion uses log(n) space, where iteratively uses constant space, but they have the same runtime), but lets do this recursion for fun
+    if(ind == 1): # not really the base case, more like an edge case
+      return
+
+    parent_ind = self.parent(ind)
+    if (self.data[ind] < self.data[parent_ind]): # can either do this by defining the < for the Item class, or you can just do .priority
+      swap(ind, parent_ind)
+      self.fix_up(parent_ind)
+
+
+  def fix_down(self, ind): # can either do this iteratively or recursively just like the fix_up
+    if (self.has_left == False and self.has_right == False):
+      return
+    elif (self.has_left == True and self.has_right == False):
+      small_child_ind = left_ind
+    else: # self.has_left == True and self.has_right == True
+      left_ind = left(ind)
+      right_ind = right(ind)
+      if (self.data[left_ind] < self.data[right_ind]):
+        small_child_ind = left_ind
+      else:
+        small_child_ind = right_ind
+
+    if (self.data[ind] > self.data[small_child_ind]):
+      swap(ind, small_child_ind)
+      self.fix_down(small_child_ind)
+
+
+
+heap = ArrayMinHeap
+
+for i in range(100):
+  heap.insert(random.randint(1, 1000), None) # rand priority and None val
+
+while (heap.is_empty() == False):
+  item = heap.delete_min()
+  print(item.priority, end=' ')
+
+print()
+
+# the algo defined above is a aorting algo, heap sort
+# nlog(n) deletes
